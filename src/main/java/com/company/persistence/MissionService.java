@@ -27,7 +27,7 @@ public class MissionService {
     private static final String NO_SUCH_PLAYER_MSG = "Player does not exist";
     private DisplayContext displayContext;
     private InputContext inputContext;
-    private ValidateIntegerService validateIntegerService;
+    private BasicValidationService basicValidationService;
     private FileReaderService fileReaderService;
     private FileWriterService fileWriterService;
 
@@ -45,15 +45,15 @@ public class MissionService {
         String missionName = inputContext.getMissionName();
         String aircraftName = getValidAircraft();
         displayContext.printMsg(ADD_MISSION_SCORE_MSG);
-        int missionScore = validateIntegerService.getValidInteger();
+        int missionScore = basicValidationService.getValidInteger();
         displayContext.printMsg(ADD_MISSION_AIR_KILLS_MSG);
-        int airKills = validateIntegerService.getValidInteger();
+        int airKills = basicValidationService.getValidInteger();
         displayContext.printMsg(ADD_MISSION_GROUND_KILLS_MSG);
-        int groundKills = validateIntegerService.getValidInteger();
+        int groundKills = basicValidationService.getValidInteger();
         displayContext.printMsg(ADD_MISSION_DEATHS_MSG);
-        int deaths = validateIntegerService.getValidInteger();
+        int deaths = basicValidationService.getValidInteger();
         displayContext.printMsg(ADD_MISSION_LANDINGS_MSG);
-        int landings = validateIntegerService.getValidInteger();
+        int landings = basicValidationService.getValidInteger();
         displayContext.printMsg(ADD_MISSION_WIN_OR_LOOSE_MSG);
         String missionResult = inputContext.getMissionResult();
         Mission mission = new Mission(playerName, missionName, aircraftName, groundKills, airKills, missionScore, landings, deaths, missionResult);
