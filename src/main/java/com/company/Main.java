@@ -1,8 +1,6 @@
 package com.company;
 
-import com.company.Input.ConsoleInputStrategy;
-import com.company.Input.InputContext;
-import com.company.Input.InputStrategy;
+import com.company.Input.ConsoleInput;
 import com.company.menu.*;
 import com.company.persistence.*;
 import com.company.display.NormalDisplay;
@@ -16,19 +14,17 @@ public class Main {
         FilterService filterService = new FilterService();
         FileWriterService fileWriterService = new FileWriterService();
         CalculateTotalPlayerScoreService calculateTotalPlayerScoreService = new CalculateTotalPlayerScoreService();
-        InputStrategy inputStrategy = new ConsoleInputStrategy();
-        InputContext inputContext = new InputContext(inputStrategy);
+        ConsoleInput consoleInput = new ConsoleInput();
         NormalDisplay normalDisplay = new NormalDisplay();
-        PersistenceStrategy persistenceStrategy = new ListPersistence(filterService);
-        PersistenceContext persistenceContext = new PersistenceContext(persistenceStrategy);
-        PlayerService playerService = new PlayerService(inputContext, fileWriterService, fileReaderService, normalDisplay);
-        BasicValidationService basicValidationService = new BasicValidationService(inputContext, normalDisplay);
-        UpdateMissionService updateMissionService = new UpdateMissionService(normalDisplay, inputContext, persistenceContext, fileReaderService, formatterService, basicValidationService, fileWriterService);
-        MissionService missionService = new MissionService(normalDisplay, inputContext, basicValidationService, fileReaderService, fileWriterService);
-        FilterMenuService filterMenuService = new FilterMenuService(normalDisplay,inputContext,formatterService,persistenceContext,fileReaderService,basicValidationService);
+        ListPersistence listPersistence = new ListPersistence(filterService);
+        PlayerService playerService = new PlayerService(consoleInput, fileWriterService, fileReaderService, normalDisplay);
+        BasicValidationService basicValidationService = new BasicValidationService(consoleInput, normalDisplay);
+        UpdateMissionService updateMissionService = new UpdateMissionService(normalDisplay, consoleInput, listPersistence, fileReaderService, formatterService, basicValidationService, fileWriterService);
+        MissionService missionService = new MissionService(normalDisplay, consoleInput, basicValidationService, fileReaderService, fileWriterService);
+        FilterMenuService filterMenuService = new FilterMenuService(normalDisplay, consoleInput,formatterService, listPersistence,fileReaderService,basicValidationService);
 
 
-        GameController gameController = new GameController(inputContext, normalDisplay, persistenceContext, fileWriterService, fileReaderService
+        GameController gameController = new GameController(consoleInput, normalDisplay, listPersistence, fileWriterService, fileReaderService
                 , formatterService, calculateTotalPlayerScoreService, playerService, missionService, updateMissionService,filterMenuService,basicValidationService);
         gameController.startTheApp();
 

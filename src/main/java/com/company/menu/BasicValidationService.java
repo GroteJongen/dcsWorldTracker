@@ -1,6 +1,6 @@
 package com.company.menu;
 
-import com.company.Input.InputContext;
+import com.company.Input.ConsoleInput;
 import com.company.display.NormalDisplay;
 import com.company.persistence.Modules;
 import lombok.AllArgsConstructor;
@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class BasicValidationService {
-    private InputContext inputContext;
+    private ConsoleInput consoleInput;
     private NormalDisplay normalDisplay;
     int getValidInteger() {
         final String wrongNumberFormatMsg = "This field needs to be an integer";
         while (true) {
             try {
-                return Integer.parseInt(inputContext.getCommand());
+                return Integer.parseInt(consoleInput.getCommand());
             } catch (NumberFormatException e) {
                 normalDisplay.printMsg(wrongNumberFormatMsg);
             }

@@ -1,6 +1,6 @@
 package com.company;
 
-import com.company.Input.InputContext;
+import com.company.Input.ConsoleInput;
 import com.company.display.NormalDisplay;
 import com.company.display.MainMenuOptions;
 import com.company.menu.*;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 class GameController {
 
 
-    private InputContext inputContext;
+    private ConsoleInput consoleInput;
     private NormalDisplay normalDisplay;
-    private PersistenceContext persistenceContext;
+    private ListPersistence listPersistence;
     private FileWriterService fileWriterService;
     private FileReaderService fileReaderService;
     private FormatterService formatterService;
@@ -37,7 +37,7 @@ class GameController {
         normalDisplay.printMsg(GenericMessages.GREETING);
         while (isRunning) {
             printMenuOptions();
-            String command = inputContext.getCommand();
+            String command = consoleInput.getCommand();
             switch (command) {
                 case "1":
                     missionService.addMission(listOfPlayers);
@@ -84,23 +84,23 @@ class GameController {
 
     private void removeMission(List<String> players) {
         normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         if (!basicValidationService.isPlayerAvailable(playerName, players)) {
             return;
         }
         List<Mission> missions = formatterService.convertMissionInStringFormatToObject(fileReaderService.readFile(playerName + MissionMessages.MISSIONS_FILE_SUFFIX));
         for (Mission mission : missions) {
-            persistenceContext.addMission(mission);
+            listPersistence.addMission(mission);
         }
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
-        String missionName = inputContext.getMissionName();
-        if (persistenceContext.searchMission(missionName) == null) {
+        String missionName = consoleInput.getMissionName();
+        if (listPersistence.searchMission(missionName) == null) {
             normalDisplay.printMsg(MissionMessages.MISSION_DOES_NOT_EXIST);
             return;
         }
-        fileWriterService.writeLines(persistenceContext.getMissionsByPlayerName(playerName), playerName + MissionMessages.MISSIONS_FILE_SUFFIX);
-        persistenceContext.remove(missionName);
-        persistenceContext.clearAll();
+        fileWriterService.writeLines(listPersistence.getMissionsByPlayerName(playerName), playerName + MissionMessages.MISSIONS_FILE_SUFFIX);
+        listPersistence.remove(missionName);
+        listPersistence.clearAll();
     }
 
 
@@ -110,32 +110,32 @@ class GameController {
 
     private void displayPlayerLog(List<String> players) {
         normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         if (!basicValidationService.isPlayerAvailable(playerName, players)) {
             return;
         }
         List<Mission> missions = formatterService.convertMissionInStringFormatToObject(fileReaderService.readFile(playerName + MissionMessages.MISSIONS_FILE_SUFFIX));
         addAllMissions(missions);
         Player player = new Player(playerName);
-        calculateTotalPlayerScoreService.setPlayerLog(player, persistenceContext.getMissionsByPlayerName(playerName));
+        calculateTotalPlayerScoreService.setPlayerLog(player, listPersistence.getMissionsByPlayerName(playerName));
         normalDisplay.printPlayerLog(player);
-        persistenceContext.clearAll();
+        listPersistence.clearAll();
 
     }
 
     private void displayPlayerMissions() {
         normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         List<String> players = fileReaderService.readFile(PlayerMessages.PLAYER_FILE);
         if (players.contains(playerName)) {
             List<Mission> missions = formatterService.convertMissionInStringFormatToObject(fileReaderService.readFile(playerName + MissionMessages.MISSIONS_FILE_SUFFIX));
             addAllMissions(missions);
-            if (persistenceContext.getMissionsByPlayerName(playerName).isEmpty()) {
+            if (listPersistence.getMissionsByPlayerName(playerName).isEmpty()) {
                 normalDisplay.printMsg(MissionMessages.EMPTY_MISSION_LIST_MSG);
                 return;
             }
-            normalDisplay.printMissions(persistenceContext.getMissionsByPlayerName(playerName));
-            persistenceContext.clearAll();
+            normalDisplay.printMissions(listPersistence.getMissionsByPlayerName(playerName));
+            listPersistence.clearAll();
             return;
         }
         normalDisplay.printMsg(PlayerMessages.NO_SUCH_PLAYER_MSG);
@@ -144,7 +144,7 @@ class GameController {
     private void searchMission(List<String> players) {
         final String addPlayerNameMsg = "put player name in";
         normalDisplay.printMsg(addPlayerNameMsg);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         if (basicValidationService.isPlayerAvailable(playerName, players)) {
             normalDisplay.printMsg(PlayerMessages.NO_SUCH_PLAYER_MSG);
             return;
@@ -153,15 +153,15 @@ class GameController {
         addAllMissions(missions);
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
         List<Mission> foundMissions = new ArrayList<>();
-        String missionName = inputContext.getMissionName();
-        Mission mission = persistenceContext.searchMission(missionName);
+        String missionName = consoleInput.getMissionName();
+        Mission mission = listPersistence.searchMission(missionName);
         if (mission == null) {
             normalDisplay.printMsg("Mission not found");
             return;
         }
         foundMissions.add(mission);
         normalDisplay.printMissions(foundMissions);
-        persistenceContext.clearAll();
+        listPersistence.clearAll();
     }
 
     private void printModules() {
@@ -172,7 +172,7 @@ class GameController {
 
     private void addAllMissions(List<Mission> missions) {
         for (Mission mission : missions) {
-            persistenceContext.addMission(mission);
+            listPersistence.addMission(mission);
         }
     }
     private void printMenuOptions(){

@@ -1,6 +1,6 @@
 package com.company.menu;
 
-import com.company.Input.InputContext;
+import com.company.Input.ConsoleInput;
 import com.company.Mission;
 import com.company.display.NormalDisplay;
 import com.company.persistence.FileReaderService;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MissionService {
     private NormalDisplay normalDisplay;
-    private InputContext inputContext;
+    private ConsoleInput consoleInput;
     private BasicValidationService basicValidationService;
     private FileReaderService fileReaderService;
     private FileWriterService fileWriterService;
@@ -26,12 +26,12 @@ public class MissionService {
         normalDisplay.printMsg(PlayerMessages.AVAILABLE_PLAYER_MODULES_MSG);
         printModules();
         normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         if (!isPlayerAvailable(playerName)) {
             return;
         }
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
-        String missionName = inputContext.getMissionName();
+        String missionName = consoleInput.getMissionName();
         String aircraftName = getValidAircraft();
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_SCORE_MSG);
         int missionScore = basicValidationService.getValidInteger();
@@ -44,7 +44,7 @@ public class MissionService {
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_LANDINGS_MSG);
         int landings = basicValidationService.getValidInteger();
         normalDisplay.printMsg(MissionMessages.ADD_MISSION_WIN_OR_LOOSE_MSG);
-        String missionResult = inputContext.getMissionResult();
+        String missionResult = consoleInput.getMissionResult();
         Mission mission = new Mission(playerName, missionName, aircraftName, groundKills, airKills, missionScore, landings, deaths, missionResult);
         fileWriterService.writeLine(mission, playerName + MissionMessages.MISSIONS_FILE_SUFFIX);
     }
@@ -74,7 +74,7 @@ public class MissionService {
         String validAircraft;
         while (true) {
             normalDisplay.printMsg(MissionMessages.ADD_AIRCRAFT_NAME_MSG);
-            validAircraft = inputContext.getAircraftName();
+            validAircraft = consoleInput.getAircraftName();
             if (!isModuleAvailable(validAircraft)) {
                 normalDisplay.printMsg(GenericMessages.NO_SUCH_MODULE_MSG);
                 continue;

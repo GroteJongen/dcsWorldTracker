@@ -5,7 +5,7 @@ import com.company.Mission;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListPersistence implements PersistenceStrategy {
+public class ListPersistence {
     private FilterService filterService;
 
     private List<Mission> mainListOfMissions = new ArrayList<>();
@@ -15,7 +15,6 @@ public class ListPersistence implements PersistenceStrategy {
     }
 
 
-    @Override
     public boolean update(Mission newMission, String missionName) {
         if (mainListOfMissions.contains(newMission)) {
             for (int i = 0; i < mainListOfMissions.size(); i++) {
@@ -28,7 +27,7 @@ public class ListPersistence implements PersistenceStrategy {
         return false;
     }
 
-    @Override
+
     public void remove(String missionName) {
         for (int i = 0; i < mainListOfMissions.size(); i++) {
             if (mainListOfMissions.get(i).getMissionName().equals(missionName)) {
@@ -37,7 +36,6 @@ public class ListPersistence implements PersistenceStrategy {
         }
     }
 
-    @Override
     public boolean addMission(Mission mission) {
         if (mainListOfMissions.contains(mission)) {
             return false;
@@ -46,7 +44,7 @@ public class ListPersistence implements PersistenceStrategy {
         return true;
     }
 
-    @Override
+
     public Mission searchMission(String missionName) {
         for (Mission mission : mainListOfMissions) {
             if (mission.getMissionName().equals(missionName))
@@ -55,32 +53,30 @@ public class ListPersistence implements PersistenceStrategy {
         return null;
     }
 
-    @Override
-    public List<Mission> sortByPoints() {
+
+    public List<Mission> sortByScore() {
         return filterService.sortByPoints(mainListOfMissions);
     }
 
-    @Override
+
     public List<Mission> sortByAirKills() {
         return filterService.sortByAirKills(mainListOfMissions);
     }
 
-    @Override
+
     public List<Mission> sortByGroundKills() {
         return filterService.sortByGroundKills(mainListOfMissions);
     }
 
-    @Override
     public List<Mission> sortByLandings() {
         return filterService.sortByLandings(mainListOfMissions);
     }
 
-    @Override
+
     public List<Mission> sortByDeaths() {
         return filterService.sortByDeaths(mainListOfMissions);
     }
 
-    @Override
     public List<Mission> getMissionByAircraft(String aircraftName) {
         return filterService.getMissionsByAircraft(mainListOfMissions, aircraftName);
     }
@@ -95,8 +91,7 @@ public class ListPersistence implements PersistenceStrategy {
         return filteredByPlayersList;
     }
 
-    @Override
-    public void removeAllMissions() {
+    public void clearAll() {
         mainListOfMissions.clear();
     }
 

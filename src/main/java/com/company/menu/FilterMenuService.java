@@ -1,12 +1,12 @@
 package com.company.menu;
 
-import com.company.Input.InputContext;
+import com.company.Input.ConsoleInput;
 import com.company.Mission;
 import com.company.display.NormalDisplay;
 import com.company.display.FilterMenuOptions;
 import com.company.persistence.FileReaderService;
 import com.company.persistence.FormatterService;
-import com.company.persistence.PersistenceContext;
+import com.company.persistence.ListPersistence;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 public class FilterMenuService {
 
     NormalDisplay normalDisplay;
-    InputContext inputContext;
+    ConsoleInput consoleInput;
     FormatterService formatterService;
-    PersistenceContext persistenceContext;
+    ListPersistence listPersistence;
     FileReaderService fileReaderService;
     BasicValidationService basicValidationService;
 
@@ -28,7 +28,7 @@ public class FilterMenuService {
         boolean exit = false;
         final String wayOfFilteringMissions = "How would you like to filter all the missions";
         normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
+        String playerName = consoleInput.getPlayerName();
         if (!basicValidationService.isPlayerAvailable(playerName, availablePlayers)) {
             return;
         }
@@ -37,55 +37,55 @@ public class FilterMenuService {
         normalDisplay.printMsg(wayOfFilteringMissions);
         while (!exit) {
             printFilterMenuOptions();
-            String action = inputContext.getPlayerName();
+            String action = consoleInput.getPlayerName();
             switch (action) {
                 case "1":
                     normalDisplay.printMsg(MissionMessages.ADD_AIRCRAFT_NAME_MSG);
-                    String aircraftName = inputContext.getAircraftName();
+                    String aircraftName = consoleInput.getAircraftName();
                     if (basicValidationService.isModuleAvailable(aircraftName)) {
-                        if (persistenceContext.getMissionByAircraft(aircraftName).isEmpty()) {
+                        if (listPersistence.getMissionByAircraft(aircraftName).isEmpty()) {
                             normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                             break;
                         }
-                        normalDisplay.printMissions(persistenceContext.getMissionByAircraft(aircraftName));
+                        normalDisplay.printMissions(listPersistence.getMissionByAircraft(aircraftName));
                     }
                     break;
                 case "2":
-                    if (persistenceContext.sortByScore().isEmpty()) {
+                    if (listPersistence.sortByScore().isEmpty()) {
                         normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                         break;
                     }
-                    normalDisplay.printMissions(persistenceContext.sortByScore());
+                    normalDisplay.printMissions(listPersistence.sortByScore());
                     break;
                 case "3":
-                    if (persistenceContext.sortByAirKills().isEmpty()) {
+                    if (listPersistence.sortByAirKills().isEmpty()) {
                         normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                         break;
                     }
-                    normalDisplay.printMissions(persistenceContext.sortByAirKills());
+                    normalDisplay.printMissions(listPersistence.sortByAirKills());
                     break;
                 case "4":
-                    if (persistenceContext.sortByGroundKills().isEmpty()) {
+                    if (listPersistence.sortByGroundKills().isEmpty()) {
                         normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                         break;
                     }
-                    normalDisplay.printMissions(persistenceContext.sortByGroundKills());
+                    normalDisplay.printMissions(listPersistence.sortByGroundKills());
                     break;
                 case "5":
-                    if (persistenceContext.sortByDeaths().isEmpty()) {
+                    if (listPersistence.sortByDeaths().isEmpty()) {
                         normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                         break;
                     }
-                    normalDisplay.printMissions(persistenceContext.sortByDeaths());
+                    normalDisplay.printMissions(listPersistence.sortByDeaths());
                 case "6":
-                    if (persistenceContext.sortByLandings().isEmpty()) {
+                    if (listPersistence.sortByLandings().isEmpty()) {
                         normalDisplay.printMsg(GenericMessages.EMPTY_MISSION_LIST_MSG);
                         break;
                     }
-                    normalDisplay.printMissions(persistenceContext.sortByLandings());
+                    normalDisplay.printMissions(listPersistence.sortByLandings());
                     break;
                 case "7":
-                    persistenceContext.clearAll();
+                    listPersistence.clearAll();
                     exit = true;
                     break;
             }
@@ -94,7 +94,7 @@ public class FilterMenuService {
 
     private void addAllMissions(List<Mission> missions) {
         for (Mission mission : missions) {
-            persistenceContext.addMission(mission);
+            listPersistence.addMission(mission);
         }
     }
 
