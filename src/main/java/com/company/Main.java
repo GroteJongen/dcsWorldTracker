@@ -24,8 +24,11 @@ public class Main {
         DisplayContext displayContext = new DisplayContext(displayStrategy);
         PersistenceStrategy persistenceStrategy = new ListPersistence(filterService);
         PersistenceContext persistenceContext = new PersistenceContext(persistenceStrategy);
+        PlayerService playerService = new PlayerService(inputContext,fileWriterService,fileReaderService,displayContext);
+        ValidateIntegerService validateIntegerService = new ValidateIntegerService(inputContext,displayContext);
+        MissionService missionService = new MissionService(displayContext,inputContext,validateIntegerService,fileReaderService,fileWriterService);
         GameController gameController = new GameController(inputContext, displayContext, persistenceContext, fileWriterService, fileReaderService
-                , formatterService, calculateTotalPlayerScoreService);
+                , formatterService, calculateTotalPlayerScoreService,playerService,missionService);
         gameController.startTheApp();
 
 

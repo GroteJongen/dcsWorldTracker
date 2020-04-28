@@ -3,13 +3,14 @@ package com.company;
 import com.company.Input.InputContext;
 import com.company.persistence.*;
 import com.company.display.DisplayContext;
+import lombok.AllArgsConstructor;
 
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 class GameController {
     private static final String ADD_PLAYER_NAME_MSG = "Put the player name in";
     private static final String ADD_MISSION_NAME_MSG = "Put the mission name in";
@@ -18,17 +19,12 @@ class GameController {
     private static final String ADD_MISSION_GROUND_KILLS_MSG = "Put the ground kills in";
     private static final String ADD_MISSION_LANDINGS_MSG = "Put the amount of landings in";
     private static final String ADD_MISSION_DEATHS_MSG = "Put the amount of deaths in";
-    private static final String ADD_MISSION_WIN_OR_LOOSE_MSG = "Put the win or loose in";
     private static final String ADD_AIRCRAFT_NAME_MSG = "Put the aircraft name in";
-    private static final String AVAILABLE_PLAYER_MODULES_MSG = "Available player modules";
-    private static final String AVAILABLE_PLAYERS_MSG = "Available players";
-    private static final String NO_SUCH_MODULE_MSG = "There is no such'a module on your list";
     private static final String NO_SUCH_PLAYER_MSG = "Player does not exist";
     private static final String PLAYER_FILE = "players";
     private static final String MISSIONS_FILE_SUFFIX = "missions";
     private static final String EMPTY_MISSION_LIST_MSG = "You don't have any missions";
     private static final String MISSION_DOES_NOT_EXIST = "Mission does not exist";
-    private static final String EMPTY_PLAYERS_LIST = "No players on list, you need to create new one";
     private InputContext inputContext;
     private DisplayContext displayContext;
     private PersistenceContext persistenceContext;
@@ -36,30 +32,20 @@ class GameController {
     private FileReaderService fileReaderService;
     private FormatterService formatterService;
     private CalculateTotalPlayerScoreService calculateTotalPlayerScoreService;
+    private PlayerService playerService;
+    private MissionService missionService;
 
-
-    GameController(InputContext inputContext, DisplayContext displayContext, PersistenceContext persistenceContext,
-                   FileWriterService fileWriterService, FileReaderService fileReaderService, FormatterService formatterService,
-                   CalculateTotalPlayerScoreService calculateTotalPlayerScoreService) {
-        this.inputContext = inputContext;
-        this.displayContext = displayContext;
-        this.persistenceContext = persistenceContext;
-        this.fileWriterService = fileWriterService;
-        this.fileReaderService = fileReaderService;
-        this.formatterService = formatterService;
-        this.calculateTotalPlayerScoreService = calculateTotalPlayerScoreService;
-    }
 
     void startTheApp() {
         boolean isRunning = true;
-        List<String> listOfPlayers = fileReaderService.readFile(PLAYER_FILE);
+        List<String> listOfPlayers =  playerService.loadPlayers();
         displayContext.printGreeting();
         while (isRunning) {
             displayContext.printMainMenu();
             String command = inputContext.getCommand();
             switch (command) {
                 case "1":
-                    addMission();
+                    missionService.addMission(listOfPlayers);
                     break;
                 case "2":
                     removeMission();
@@ -94,39 +80,6 @@ class GameController {
         }
     }
 
-    private void addMission() {
-        displayContext.printMsg(AVAILABLE_PLAYERS_MSG);
-        displayContext.printOptions(fileReaderService.readFile(PLAYER_FILE));
-        displayContext.printMsg(AVAILABLE_PLAYER_MODULES_MSG);
-        printModules();
-        displayContext.printMsg(ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
-        if (!isPlayerAvailable(playerName)) {
-            return;
-        }
-        displayContext.printMsg(ADD_MISSION_NAME_MSG);
-        String missionName = inputContext.getMissionName();
-        displayContext.printMsg(ADD_AIRCRAFT_NAME_MSG);
-        String aircraftName = inputContext.getAircraftName();
-        if (!isModuleAvailable(aircraftName)) {
-            displayContext.printMsg(NO_SUCH_MODULE_MSG);
-            return;
-        }
-        displayContext.printMsg(ADD_MISSION_SCORE_MSG);
-        int missionScore = getValidInteger();
-        displayContext.printMsg(ADD_MISSION_AIR_KILLS_MSG);
-        int airKills = getValidInteger();
-        displayContext.printMsg(ADD_MISSION_GROUND_KILLS_MSG);
-        int groundKills = getValidInteger();
-        displayContext.printMsg(ADD_MISSION_DEATHS_MSG);
-        int deaths = getValidInteger();
-        displayContext.printMsg(ADD_MISSION_LANDINGS_MSG);
-        int landings = getValidInteger();
-        displayContext.printMsg(ADD_MISSION_WIN_OR_LOOSE_MSG);
-        String missionResult = inputContext.getMissionResult();
-        Mission mission = new Mission(playerName, missionName, aircraftName, groundKills, airKills, missionScore, landings, deaths, missionResult);
-        fileWriterService.writeLine(mission, playerName + MISSIONS_FILE_SUFFIX);
-    }
 
     private void displayPlayersAndModules() {
         displayContext.printOptions(fileReaderService.readFile(PLAYER_FILE));
@@ -226,29 +179,10 @@ class GameController {
 
         }
     }
-    //TODO if there's no file, make a new one.
-    //TODO if player's list is empty then ask user to add the first player
-    private void addPlayer(List<String> players) {
-        final String playerIsAlreadyOnList = "Players is already present on the list";
-        List<String> newPlayers = new ArrayList<>();
-        try{
-            displayContext.printMsg(ADD_PLAYER_NAME_MSG);
-            String playerName = inputContext.getPlayerName();
-            if (players.contains(playerName)) {
-                displayContext.printMsg(playerIsAlreadyOnList);
-                return;
-            }
-            players.add(playerName);
-            fileWriterService.savePlayer(players, PLAYER_FILE);
-        }catch (UnsupportedOperationException error){
-            displayContext.printMsg(EMPTY_PLAYERS_LIST);
-            String playerName = inputContext.getPlayerName();
-            newPlayers.add(playerName);
-            fileWriterService.savePlayer(newPlayers,PLAYER_FILE);
-        }
 
+    private void addPlayer(List<String> players){
+        playerService.addPlayer(players);
     }
-
     private void filterMissions() {
         boolean exit = false;
         final String wayOfFilteringMissions = "How would you like to filter all the missions";
