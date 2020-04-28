@@ -3,6 +3,7 @@ package com.company;
 import com.company.Input.ConsoleInputStrategy;
 import com.company.Input.InputContext;
 import com.company.Input.InputStrategy;
+import com.company.menu.*;
 import com.company.persistence.*;
 import com.company.display.DisplayContext;
 import com.company.display.DisplayStrategy;
@@ -31,7 +32,7 @@ public class Main {
 
 
         GameController gameController = new GameController(inputContext, displayContext, persistenceContext, fileWriterService, fileReaderService
-                , formatterService, calculateTotalPlayerScoreService, playerService, missionService, updateMissionService,filterMenuService);
+                , formatterService, calculateTotalPlayerScoreService, playerService, missionService, updateMissionService,filterMenuService,basicValidationService);
         gameController.startTheApp();
 
 

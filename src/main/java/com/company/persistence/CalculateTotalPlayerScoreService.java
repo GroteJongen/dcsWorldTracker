@@ -68,15 +68,6 @@ public class CalculateTotalPlayerScoreService {
         return totalVictories;
     }
 
-   /* public double calculateKillDeathRatio(List<Mission> missions) {
-        int totalKills = calculateTotalPlayerAirKills(missions) + calculateTotalPlayerGroundKills(missions);
-        int totalDeaths = calculateTotalPlayerDeaths(missions);
-        if (totalDeaths <= 0) {
-            return totalKills;
-        }
-        return totalKills / totalDeaths;
-    }*/
-
     private int calculateMissionsFlown(List<Mission> missions) {
         return missions.size();
     }

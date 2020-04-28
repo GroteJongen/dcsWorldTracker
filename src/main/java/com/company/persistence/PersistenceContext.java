@@ -55,7 +55,8 @@ public class PersistenceContext {
     public List<Mission> getMissionsByPlayerName(String playerName) {
         return persistenceStrategy.getMissionsByPlayerName(playerName);
     }
-    public void clearAll(){
+
+    public void clearAll() {
         persistenceStrategy.removeAllMissions();
     }
 

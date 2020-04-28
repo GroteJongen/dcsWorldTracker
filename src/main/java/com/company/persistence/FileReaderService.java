@@ -30,15 +30,4 @@ public class FileReaderService {
             return Collections.emptyList();
         }
     }
-  /*  public List<Player> readJsonFile(){
-        List<Player> players = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Player player = objectMapper.readValue(new File("C:\\Users\\Marek\\dcsWorldTracker\\player.json"), Player.class);
-            players.add(player);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return players;
-    }*/
 }

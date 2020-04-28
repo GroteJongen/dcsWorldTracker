@@ -1,7 +1,8 @@
-package com.company.persistence;
+package com.company.menu;
 
 import com.company.Input.InputContext;
 import com.company.display.DisplayContext;
+import com.company.persistence.Modules;
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class BasicValidationService {
-    private static final String NO_SUCH_PLAYER_MSG = "Player does not exist";
     private InputContext inputContext;
     private DisplayContext displayContext;
     int getValidInteger() {
@@ -23,9 +23,9 @@ public class BasicValidationService {
             }
         }
     }
-    boolean isPlayerAvailable(String playerName, List<String> players) {
+    public boolean isPlayerAvailable(String playerName, List<String> players) {
         if (!players.contains(playerName)) {
-            displayContext.printMsg(NO_SUCH_PLAYER_MSG);
+            displayContext.printMsg(PlayerMessages.NO_SUCH_PLAYER_MSG);
             return false;
         }
         return true;

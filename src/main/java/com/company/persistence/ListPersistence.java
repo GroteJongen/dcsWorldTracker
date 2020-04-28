@@ -39,11 +39,11 @@ public class ListPersistence implements PersistenceStrategy {
 
     @Override
     public boolean addMission(Mission mission) {
-       if(mainListOfMissions.contains(mission)){
-           return false;
-       }
-       mainListOfMissions.add(mission);
-       return true;
+        if (mainListOfMissions.contains(mission)) {
+            return false;
+        }
+        mainListOfMissions.add(mission);
+        return true;
     }
 
     @Override
