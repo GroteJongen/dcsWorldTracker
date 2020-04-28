@@ -1,4 +1,4 @@
-package com.company;
+package com.company.persistence;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package com.company;
 
 import com.company.Input.InputContext;
-import com.company.Persistence.*;
-import com.display.DisplayContext;
+import com.company.persistence.*;
+import com.company.display.DisplayContext;
 
 
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ class GameController {
     private static final String MISSIONS_FILE_SUFFIX = "missions";
     private static final String EMPTY_MISSION_LIST_MSG = "You don't have any missions";
     private static final String MISSION_DOES_NOT_EXIST = "Mission does not exist";
+    private static final String EMPTY_PLAYERS_LIST = "No players on list, you need to create new one";
     private InputContext inputContext;
     private DisplayContext displayContext;
     private PersistenceContext persistenceContext;
@@ -51,6 +52,7 @@ class GameController {
 
     void startTheApp() {
         boolean isRunning = true;
+        List<String> listOfPlayers = fileReaderService.readFile(PLAYER_FILE);
         displayContext.printGreeting();
         while (isRunning) {
             displayContext.printMainMenu();
@@ -72,7 +74,7 @@ class GameController {
                     displayPlayerLog();
                     break;
                 case "6":
-                    addPlayer();
+                    addPlayer(listOfPlayers);
                     break;
                 case "7":
                     displayPlayerMissions();
@@ -224,18 +226,27 @@ class GameController {
 
         }
     }
-
-    private void addPlayer() {
-         final String playerIsAlreadyOnList = "Players is already present on the list";
-        List<String> listOfPlayers = fileReaderService.readFile(PLAYER_FILE);
-        displayContext.printMsg(ADD_PLAYER_NAME_MSG);
-        String playerName = inputContext.getPlayerName();
-        if (listOfPlayers.contains(playerName)) {
-            displayContext.printMsg(playerIsAlreadyOnList);
-            return;
+    //TODO if there's no file, make a new one.
+    //TODO if player's list is empty then ask user to add the first player
+    private void addPlayer(List<String> players) {
+        final String playerIsAlreadyOnList = "Players is already present on the list";
+        List<String> newPlayers = new ArrayList<>();
+        try{
+            displayContext.printMsg(ADD_PLAYER_NAME_MSG);
+            String playerName = inputContext.getPlayerName();
+            if (players.contains(playerName)) {
+                displayContext.printMsg(playerIsAlreadyOnList);
+                return;
+            }
+            players.add(playerName);
+            fileWriterService.savePlayer(players, PLAYER_FILE);
+        }catch (UnsupportedOperationException error){
+            displayContext.printMsg(EMPTY_PLAYERS_LIST);
+            String playerName = inputContext.getPlayerName();
+            newPlayers.add(playerName);
+            fileWriterService.savePlayer(newPlayers,PLAYER_FILE);
         }
-        listOfPlayers.add(playerName);
-        fileWriterService.savePlayer(listOfPlayers, PLAYER_FILE);
+
     }
 
     private void filterMissions() {
@@ -344,6 +355,10 @@ class GameController {
         List<Mission> foundMissions = new ArrayList<>();
         String missionName = inputContext.getMissionName();
         Mission mission = persistenceContext.searchMission(missionName);
+        if(mission == null){
+            displayContext.printMsg("Mission not found");
+            return;
+        }
         foundMissions.add(mission);
         displayContext.printMissions(foundMissions);
     }

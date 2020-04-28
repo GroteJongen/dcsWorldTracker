@@ -3,10 +3,10 @@ package com.company;
 import com.company.Input.ConsoleInputStrategy;
 import com.company.Input.InputContext;
 import com.company.Input.InputStrategy;
-import com.company.Persistence.*;
-import com.display.DisplayContext;
-import com.display.DisplayStrategy;
-import com.display.NormalDisplay;
+import com.company.persistence.*;
+import com.company.display.DisplayContext;
+import com.company.display.DisplayStrategy;
+import com.company.display.NormalDisplay;
 
 
 

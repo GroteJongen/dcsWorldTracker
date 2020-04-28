@@ -1,7 +1,6 @@
-package com.company.Persistence;
+package com.company.persistence;
 
 import com.company.Mission;
-import com.company.Player;
 
 import java.util.List;
 

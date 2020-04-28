@@ -1,12 +1,12 @@
-package com.display;
+package com.company.display;
 
 import com.company.Mission;
-import com.company.Player;
+import com.company.persistence.Player;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//TODO Delete display context and simplyfy all the stuff.
 public class DisplayContext {
     private static final String GREETING = "Hallo dear user";
     private static final String GOODBYE = "Goodbye dear user";

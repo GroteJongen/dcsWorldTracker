@@ -1,4 +1,4 @@
-package com.display;
+package com.company.display;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

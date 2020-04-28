@@ -1,4 +1,4 @@
-package com.company.Persistence;
+package com.company.persistence;
 
 import com.company.Mission;
 

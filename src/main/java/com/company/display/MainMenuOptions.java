@@ -1,4 +1,4 @@
-package com.display;
+package com.company.display;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,6 @@ public enum MainMenuOptions {
     SHOW_PLAYERS_AND_MODULES("Show all players and modules"),
     FILTER_MISSIONS("Filter all Missions"),
     EXIT("Exit");
-
 
 
     private final String menuOptions;

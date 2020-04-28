@@ -1,7 +1,8 @@
 package com.company.Input;
 
 import java.util.Scanner;
-
+//TODO delete switch.
+//TODO implement scanner in Game controller and validation in external service.
 public class ConsoleInputStrategy implements InputStrategy {
     private Scanner scanner = new Scanner(System.in);
 
@@ -51,6 +52,7 @@ public class ConsoleInputStrategy implements InputStrategy {
     }
 
     @Override
+
     public String getMissionResult() {
         while(true){
             String winOrLoose = scanner.nextLine();

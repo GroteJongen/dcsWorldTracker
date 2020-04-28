@@ -1,4 +1,4 @@
-package com.company;
+package com.company.persistence;
 
 import lombok.Getter;
 import lombok.Setter;

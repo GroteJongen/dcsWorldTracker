@@ -1,6 +1,7 @@
-package com.display;
+package com.company.display;
+
 import com.company.Mission;
-import com.company.Player;
+import com.company.persistence.Player;
 
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class NormalDisplay implements DisplayStrategy {
         StringBuilder stringBuilder = new StringBuilder();
         String divider = " | ";
         stringBuilder.append(BOARDER + NEW_LINE);
-        for(int i = 0; i < missions.size(); i++){
+        for (int i = 0; i < missions.size(); i++) {
 
-            stringBuilder.append(i+1).append(arrow).append(playerName)
+            stringBuilder.append(i + 1).append(arrow).append(playerName)
                     .append(missions.get(i).getPlayerName()).append(divider).append(missionName)
                     .append(missions.get(i).getMissionName()).append(divider)
                     .append(aircraftName).append(missions.get(i).getAircraftName()).append(divider)
@@ -64,11 +65,11 @@ public class NormalDisplay implements DisplayStrategy {
 
     @Override
     public void printPlayerLog(Player player) {
-         final String victories = "Victories: ";
-         final String missionsFlown = "Missions flown: ";
-         final String loses = "loses: ";
-        System.out.println(playerName + player.getPlayerName()+ " | " + score + player.getTotalScore() + " | " + airKills + player.getTotalAirKills()
-        + " | " + groundKills + player.getTotalGroundKills() + " | " + deaths + player.getTotalDeaths() + " | " + landings +  player.getTotalLandings() + " | " + missionsFlown
-                + player.getTotalMissions()  + " | " + victories + player.getTotalVictories() + " | "  + loses + player.getTotalLooses());
+        final String victories = "Victories: ";
+        final String missionsFlown = "Missions flown: ";
+        final String loses = "loses: ";
+        System.out.println(playerName + player.getPlayerName() + " | " + score + player.getTotalScore() + " | " + airKills + player.getTotalAirKills()
+                + " | " + groundKills + player.getTotalGroundKills() + " | " + deaths + player.getTotalDeaths() + " | " + landings + player.getTotalLandings() + " | " + missionsFlown
+                + player.getTotalMissions() + " | " + victories + player.getTotalVictories() + " | " + loses + player.getTotalLooses());
     }
 }
