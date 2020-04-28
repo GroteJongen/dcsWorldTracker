@@ -4,7 +4,7 @@ public interface InputStrategy {
 
     String getCommand();
 
-    String getPlayerName();
+    String etPlayerName();
 
     String getMissionName();
 

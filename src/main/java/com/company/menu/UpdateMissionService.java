@@ -2,7 +2,7 @@ package com.company.menu;
 
 import com.company.Input.InputContext;
 import com.company.Mission;
-import com.company.display.DisplayContext;
+import com.company.display.NormalDisplay;
 import com.company.display.UpdateMenuOptions;
 import com.company.persistence.FileReaderService;
 import com.company.persistence.FileWriterService;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UpdateMissionService {
 
 
-    DisplayContext displayContext;
+    NormalDisplay normalDisplay;
     InputContext inputContext;
     PersistenceContext persistenceContext;
     FileReaderService fileReaderService;
@@ -29,17 +29,17 @@ public class UpdateMissionService {
     public void updateMission(List<String> players) {
         final String changesSavedMsg = "Changes have been saved";
         final String abortingUpdates = "Aborting updates";
-        displayContext.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
+        normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
         String playerName = inputContext.getPlayerName();
         if (!basicValidationService.isPlayerAvailable(playerName, players)) {
             return;
         }
         List<Mission> missions = formatterService.convertMissionInStringFormatToObject(fileReaderService.readFile(playerName + MissionMessages.MISSIONS_FILE_SUFFIX));
         addAllMissions(missions);
-        displayContext.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
+        normalDisplay.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
         String missionName = inputContext.getMissionName();
         if (persistenceContext.searchMission(missionName) == null) {
-            displayContext.printMsg(MissionMessages.MISSION_DOES_NOT_EXIST);
+            normalDisplay.printMsg(MissionMessages.MISSION_DOES_NOT_EXIST);
             return;
         }
         Mission missionToUpdate = persistenceContext.searchMission(missionName);
@@ -50,47 +50,47 @@ public class UpdateMissionService {
 
             switch (command) {
                 case "1":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_NAME_MSG);
                     missionToUpdate.setMissionName(inputContext.getMissionName());
                     break;
                 case "2":
-                    displayContext.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
+                    normalDisplay.printMsg(PlayerMessages.ADD_PLAYER_NAME_MSG);
                     missionToUpdate.setPlayerName(inputContext.getPlayerName());
                     break;
                 case "3":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_SCORE_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_SCORE_MSG);
                     missionToUpdate.setScore(basicValidationService.getValidInteger());
                     break;
                 case "4":
-                    displayContext.printMsg(MissionMessages.ADD_AIRCRAFT_NAME_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_AIRCRAFT_NAME_MSG);
                     missionToUpdate.setAircraftName(inputContext.getAircraftName());
                     break;
                 case "5":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_GROUND_KILLS_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_GROUND_KILLS_MSG);
                     missionToUpdate.setGroundKills(basicValidationService.getValidInteger());
                     break;
                 case "6":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_AIR_KILLS_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_AIR_KILLS_MSG);
                     missionToUpdate.setAirKills(basicValidationService.getValidInteger());
                     break;
                 case "7":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_DEATHS_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_DEATHS_MSG);
                     missionToUpdate.setDeaths(basicValidationService.getValidInteger());
                     break;
                 case "8":
-                    displayContext.printMsg(MissionMessages.ADD_MISSION_LANDINGS_MSG);
+                    normalDisplay.printMsg(MissionMessages.ADD_MISSION_LANDINGS_MSG);
                     missionToUpdate.setLandings(basicValidationService.getValidInteger());
                     break;
                 case "9":
                     persistenceContext.update(missionName, missionToUpdate);
                     fileWriterService.writeLines(persistenceContext.getMissionsByPlayerName(playerName), playerName + MissionMessages.MISSIONS_FILE_SUFFIX);
-                    displayContext.printMsg(changesSavedMsg);
+                    normalDisplay.printMsg(changesSavedMsg);
                     persistenceContext.clearAll();
                     isRunning = false;
                     break;
                 case "10":
                     isRunning = false;
-                    displayContext.printMsg(abortingUpdates);
+                    normalDisplay.printMsg(abortingUpdates);
                     persistenceContext.clearAll();
                     break;
             }
@@ -107,6 +107,6 @@ public class UpdateMissionService {
     private void printMenuOptions() {
         List<String> updateMenuOptions = Arrays.stream(UpdateMenuOptions.values())
                 .map(UpdateMenuOptions::getOption).collect(Collectors.toList());
-        displayContext.printOptions(updateMenuOptions);
+        normalDisplay.printList(updateMenuOptions);
     }
 }

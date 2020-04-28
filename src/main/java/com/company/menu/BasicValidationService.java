@@ -1,7 +1,7 @@
 package com.company.menu;
 
 import com.company.Input.InputContext;
-import com.company.display.DisplayContext;
+import com.company.display.NormalDisplay;
 import com.company.persistence.Modules;
 import lombok.AllArgsConstructor;
 
@@ -12,20 +12,20 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BasicValidationService {
     private InputContext inputContext;
-    private DisplayContext displayContext;
+    private NormalDisplay normalDisplay;
     int getValidInteger() {
         final String wrongNumberFormatMsg = "This field needs to be an integer";
         while (true) {
             try {
                 return Integer.parseInt(inputContext.getCommand());
             } catch (NumberFormatException e) {
-                displayContext.printMsg(wrongNumberFormatMsg);
+                normalDisplay.printMsg(wrongNumberFormatMsg);
             }
         }
     }
     public boolean isPlayerAvailable(String playerName, List<String> players) {
         if (!players.contains(playerName)) {
-            displayContext.printMsg(PlayerMessages.NO_SUCH_PLAYER_MSG);
+            normalDisplay.printMsg(PlayerMessages.NO_SUCH_PLAYER_MSG);
             return false;
         }
         return true;

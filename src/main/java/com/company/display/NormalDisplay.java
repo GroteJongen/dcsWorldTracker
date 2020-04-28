@@ -5,7 +5,7 @@ import com.company.persistence.Player;
 
 import java.util.List;
 
-public class NormalDisplay implements DisplayStrategy {
+public class NormalDisplay {
     private final String playerName = "Player name: ";
     private final String airKills = "Air kills: ";
     private final String groundKills = "Ground kills: ";
@@ -16,7 +16,7 @@ public class NormalDisplay implements DisplayStrategy {
     private final String NEW_LINE = "\n";
     private final String arrow = " --> ";
 
-    @Override
+
     public void printList(List<String> options) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -30,13 +30,13 @@ public class NormalDisplay implements DisplayStrategy {
         System.out.println(stringBuilder);
     }
 
-    @Override
-    public void printMessage(String message) {
+
+    public void printMsg(String message) {
         String messageToPrint = (BOARDER + NEW_LINE) + message + NEW_LINE + BOARDER + NEW_LINE;
         System.out.print(messageToPrint);
     }
 
-    @Override
+
     public void printMissions(List<Mission> missions) {
         final String missionName = "Mission name: ";
         final String aircraftName = "Aircraft: ";
@@ -63,7 +63,6 @@ public class NormalDisplay implements DisplayStrategy {
         System.out.println(stringBuilder);
     }
 
-    @Override
     public void printPlayerLog(Player player) {
         final String victories = "Victories: ";
         final String missionsFlown = "Missions flown: ";
